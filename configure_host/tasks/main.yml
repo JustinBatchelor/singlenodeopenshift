@@ -9,7 +9,7 @@
 
 - name: include task to configure ubuntu hosts
   ansible.builtin.include_tasks: config-ubuntu.yml
-  when: ansible_facts['ansible_distrobution'] == 'Ubuntu'
+  when: ansible_distribution == 'Ubuntu'
 
 - name: include task to create and configure the bridge connection
   ansible.builtin.include_tasks: create-bridge-connection.yml

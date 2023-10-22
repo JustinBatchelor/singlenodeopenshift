@@ -50,6 +50,13 @@
   ansible.builtin.set_fact:
     infra_env_id: "{{ infra_env_result.json.id }}"
 
+- name: task to ensure that the isos path exists
+  ansible.builtin.file:
+    path: "{{ isos.path }}"
+    state: directory
+    owner: root
+    group: root
+
 - name: download url to iso path variable
   ansible.builtin.get_url:
     url: "{{ infra_env_result.json.download_url }}"

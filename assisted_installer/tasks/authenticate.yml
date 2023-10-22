@@ -15,6 +15,7 @@
 
 - debug:
     msg: "{{ api_token }}"
+  when: debug_mode == true
 
 - name: api authentication test
   ansible.builtin.uri:
@@ -28,3 +29,4 @@
 
 - debug:
     msg: "{{ api_auth_test.json }}"
+  when: debug_mode == true

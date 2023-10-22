@@ -5,10 +5,10 @@
     - vars.yml
   vars_prompt:
     - name: offline_token
-      prompt: "Enter your offline token here: "
+      prompt: "Enter your offline token here"
       private: false
     - name: ansible_become_password
-      prompt: "Enter your sudo password here: "
+      prompt: "Enter your sudo password here"
       private: false
   become: true
   tasks:

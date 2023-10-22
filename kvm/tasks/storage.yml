@@ -4,6 +4,22 @@
     path: /var/lib/libvirt/images/{{ storagePool['default']['volume']['name'] }}
   register: volume_status
 
+- name: define a new storage pool
+  community.libvirt.virt_pool:
+    command: define
+    name: "{{ storagePool.default.name }}"
+    xml: '{{ lookup("template", "templates/storagePool.xml.j2") }}'
+
+- name: Build a storage pool if it does not exist
+  community.libvirt.virt_pool:
+    command: build
+    name: "{{ storagePool.default.name }}"
+
+- name: Start a storage pool
+  community.libvirt.virt_pool:
+    command: create
+    name: "{{ storagePool.default.name }}"
+
 - name: ensure volume with {{ storage }} GB exists
   ansible.builtin.command:
     cmd: "qemu-img create -f qcow2 {{ storagePool['default']['volume']['name'] }} {{ storage }}G"
