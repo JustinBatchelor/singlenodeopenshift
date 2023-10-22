@@ -4,6 +4,9 @@
 - name: include tasks to configure pull secret
   ansible.builtin.include_tasks: config-pull-secret.yml
 
+- name: include tasks to configure ocm
+  ansible.builtin.include_tasks: config-ocm.yml
+
 - name: include task to configure ubuntu hosts
   ansible.builtin.include_tasks: config-ubuntu.yml
   when: ansible_facts['ansible_distrobution'] == 'Ubuntu'
