@@ -1,29 +1,53 @@
 ---
 - name: get volume status
   ansible.builtin.stat:
-    path: /var/lib/libvirt/images/{{ storagePool['default']['volume']['name'] }}
+    path: "{{ storagePool[storage_pool_name]['path'] }}{{ storagePool[storage_pool_name]['volume']['name'] }}"
   register: volume_status
 
-- name: define a new storage pool
+# Gather facts about storage pools
+# Facts will be available as 'ansible_libvirt_pools'
+- name: Gather facts about storage pools
   community.libvirt.virt_pool:
-    command: define
-    name: "{{ storagePool.default.name }}"
-    xml: '{{ lookup("template", "templates/storagePool.xml.j2") }}'
+    command: facts
 
-- name: Build a storage pool if it does not exist
-  community.libvirt.virt_pool:
-    command: build
-    name: "{{ storagePool.default.name }}"
+- name: task to init basic facts about storage pools
+  ansible.builtin.set_fact:
+    storage_pool_state: "{{ ansible_libvirt_pools[storage_pool_name]['state'] | default('', true) }}"
 
-- name: Start a storage pool
-  community.libvirt.virt_pool:
-    command: create
-    name: "{{ storagePool.default.name }}"
+- block:
+  - name: Stop {{ storage_pool_name }} storage pool
+    community.libvirt.virt_pool:
+      command: destroy
+      name: "{{ storage_pool_name }}"
+
+  - name: Delete the {{ storage_pool_name }} storage pool (destroys contents)
+    community.libvirt.virt_pool:
+      command: delete
+      name: "{{ storage_pool_name }}"
+
+  - name: define {{ storage_pool_name }} storage pool
+    community.libvirt.virt_pool:
+      command: define
+      name: "{{ storage_pool_name }}"
+      xml: '{{ lookup("template", "templates/storagePool.xml.j2") }}'
+
+  - name: Build {{ storage_pool_name }} storage pool
+    community.libvirt.virt_pool:
+      command: build
+      name: "{{ storage_pool_name }}"
+
+  - name: Start {{ storage_pool_name }} storage pool
+    community.libvirt.virt_pool:
+      command: create
+      name: "{{ storage_pool_name }}"
+
+  when: 
+    - storage_pool_name != 'active'
 
 - name: ensure volume with {{ storage }} GB exists
   ansible.builtin.command:
-    cmd: "qemu-img create -f qcow2 {{ storagePool['default']['volume']['name'] }} {{ storage }}G"
-    chdir: "{{ storagePool['default']['path'] }}"
+    cmd: "qemu-img create -f qcow2 {{ storagePool[storage_pool_name]['volume']['name'] }} {{ storage }}G"
+    chdir: "{{ storagePool[storage_pool_name]['path'] }}"
   register: qemu_results
   when: volume_status.stat.exists == false
 
@@ -33,5 +57,5 @@
 
 - name: task to refresh the pool
   community.libvirt.virt_pool:
-    name: default
+    name: "{{ storage_pool_name }}"
     command: refresh

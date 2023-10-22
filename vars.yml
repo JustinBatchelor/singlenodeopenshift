@@ -1,6 +1,7 @@
 ---
 vmname: ansible-openshift-test-8
 base_dns_domain: "example.com"
+storage_pool_name: "default"
 
 cluster_base_domain: "{{ vmname }}.{{ base_dns_domain }}"
 
@@ -24,6 +25,11 @@ interfaces:
 storagePool:
   default:
     name: "default"
+    path: /var/lib/libvirt/images/
+    volume:
+      name: "{{ vmname }}.qcow2"
+  openshift:
+    name: "openshift"
     path: /var/lib/libvirt/images/
     volume:
       name: "{{ vmname }}.qcow2"
