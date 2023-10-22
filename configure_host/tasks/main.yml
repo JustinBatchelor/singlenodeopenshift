@@ -1,0 +1,13 @@
+---
+# tasks file for configure_host
+
+- name: include tasks to configure pull secret
+  ansible.builtin.include_tasks: config-pull-secret.yml
+
+- name: include task to configure ubuntu hosts
+  ansible.builtin.include_tasks: config-ubuntu.yml
+  when: ansible_facts['ansible_distrobution'] == 'Ubuntu'
+
+- name: include task to create and configure the bridge connection
+  ansible.builtin.include_tasks: create-bridge-connection.yml
+

@@ -1,0 +1,40 @@
+---
+vmname: ansible-openshift-test-7
+base_dns_domain: "example.com"
+
+cluster_base_domain: "{{ vmname }}.{{ base_dns_domain }}"
+
+memory: 16777216
+vcpus: 8
+storage: 130
+minutes: 10
+
+pull_secret_path: /home/batchelor/Downloads/pull-secret.txt # /absolute/path/to/pull-secret.txt
+
+ocm_cli_url: "https://github.com/openshift-online/ocm-cli/releases/download/v0.1.30/ocm-linux-amd64"
+
+isos:
+  path: /var/lib/libvirt/isos/
+  name: "{{ vmname }}-assisted-install.iso"
+
+interfaces:
+  bridge:
+    name: br0
+
+storagePool:
+  default:
+    path: /var/lib/libvirt/images/
+    volume:
+      name: "{{ vmname }}.qcow2"
+
+registerCluster:
+  name: "{{ vmname }}"
+  high_availability_mode: "None"
+  openshift_version: "4.13"
+
+infraEnvironment:
+  name: "{{ vmname }}-infra-env"
+  image_type: "minimal-iso"
+  cpu_architecture: "x86_64"
+
+debug_mode: true

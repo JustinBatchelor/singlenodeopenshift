@@ -1,0 +1,27 @@
+---
+- name: hit api for a list of all clusters
+  ansible.builtin.uri:
+    url: https://api.openshift.com/api/assisted-install/v2/clusters
+    method: GET
+    body_format: json
+    headers:
+      Authorization: "Bearer {{ api_token }}"
+      Content-Type: "application/json"
+    status_code: 200
+    return_content: true
+  register: cluster_results
+
+- debug:
+    msg: "{{ cluster_results.json }}"
+  when: debug_mode == true
+
+- name: overwrite cluster_exists variable if a cluster with the same name already exists
+  ansible.builtin.set_fact:
+    cluster_exists: "{{ item.name == vmname }}"
+    cluster_id: "{{ item.id }}"
+  loop: "{{ cluster_results.json | default([], true) }}"
+  when: item.name == vmname
+
+- debug:
+    msg: "{{ cluster_exists }}"
+  when: debug_mode == true

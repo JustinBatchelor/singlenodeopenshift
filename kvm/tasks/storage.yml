@@ -1,0 +1,21 @@
+---
+- name: get volume status
+  ansible.builtin.stat:
+    path: /var/lib/libvirt/images/{{ storagePool['default']['volume']['name'] }}
+  register: volume_status
+
+- name: ensure volume with {{ storage }} GB exists
+  ansible.builtin.command:
+    cmd: "qemu-img create -f qcow2 {{ storagePool['default']['volume']['name'] }} {{ storage }}G"
+    chdir: "{{ storagePool['default']['path'] }}"
+  register: qemu_results
+  when: volume_status.stat.exists == false
+
+- debug:
+    msg: "{{ qemu_results.stdout_lines }}"
+  when: debug_mode == true and volume_status.stat.exists == false
+
+- name: task to refresh the pool
+  community.libvirt.virt_pool:
+    name: default
+    command: refresh

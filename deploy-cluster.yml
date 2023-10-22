@@ -1,0 +1,29 @@
+---
+- name: Ansible Playbook to automate deploying a sno cluster on your local machine
+  hosts: localhost
+  vars_files:
+    - vars.yml
+  vars_prompt:
+    - name: offline_token
+      prompt: "Enter your offline token here: "
+      private: false
+    - name: ansible_become_password
+      prompt: "Enter your sudo password here: "
+      private: false
+  become: true
+  tasks:
+  - name: call configure_host role to configure the host
+    ansible.builtin.include_role:
+      name: configure_host
+
+  - name: call assisted_installer role to register new cluster
+    ansible.builtin.include_role:
+      name: assisted_installer
+
+  - name: call kvm role to provision the virtual machine
+    ansible.builtin.include_role:
+      name: kvm
+
+  - name: call install_cluster role when the cluster exists
+    ansible.builtin.include_role:
+      name: install_cluster

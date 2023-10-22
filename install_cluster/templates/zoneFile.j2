@@ -1,0 +1,20 @@
+;
+; BIND data file for {{ base_dns_domain }} zone
+;
+$TTL    604800
+@       IN      SOA     ns.{{ base_dns_domain }}. root.{{ base_dns_domain }}. (
+                              1         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+; Name servers
+@       IN      NS      ns.{{ base_dns_domain }}.
+
+; A records for domain
+ns      IN      A       {{ ansible_facts['default_ipv4']['address'] }}
+
+; Custom records
+api.{{ vmname }}     IN      A       {{ cluster_results.json.api_vip }}
+*.apps.{{ vmname }}  IN      A       {{ cluster_results.json.api_vip }}

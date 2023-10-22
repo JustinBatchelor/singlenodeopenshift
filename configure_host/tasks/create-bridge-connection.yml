@@ -1,0 +1,38 @@
+# Need task to create the bridge connection
+- name: task to get interface_name from ansible_facts
+  ansible.builtin.set_fact:
+    interface_name: "{{ ansible_facts['default_ipv4']['interface'] }}"
+
+- debug:
+    msg: "{{ interface_name}}"
+  when: debug_mode == true
+
+- name: Ensure the bridge br0 is present
+  community.general.nmcli:
+    conn_name: br0
+    type: bridge
+    state: present
+    autoconnect: yes
+    ifname: br0
+
+- name: Add {{ interface_name }} as a slave to the bridge
+  community.general.nmcli:
+    conn_name: br0-slave
+    type: bridge-slave
+    state: present
+    autoconnect: yes
+    ifname: "{{ interface_name }}"
+    master: br0
+
+- name: Set the bridge to use DHCP
+  community.general.nmcli:
+    conn_name: br0
+    type: bridge
+    state: present
+    autoconnect: yes
+    ifname: br0
+
+- name: Restart NetworkManager
+  ansible.builtin.systemd:
+    name: NetworkManager
+    state: restarted

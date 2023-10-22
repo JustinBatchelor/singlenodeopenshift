@@ -1,0 +1,30 @@
+---
+- name: task to login to ocm with offline token
+  ansible.builtin.command:
+    cmd: "ocm login --token={{ offline_token }}"
+  register: ocm_login
+
+- name: task to get a new token from ocm cli
+  ansible.builtin.command:
+    cmd: "ocm token"
+  register: ocm_token
+
+- name: set api_token variable
+  ansible.builtin.set_fact: 
+    api_token: "{{ ocm_token.stdout_lines[0] }}"
+
+- debug:
+    msg: "{{ api_token }}"
+
+- name: api authentication test
+  ansible.builtin.uri:
+    url: https://api.openshift.com/api/assisted-install/v2/component-versions
+    method: GET
+    headers:
+      Authorization: "Bearer {{ api_token }}"
+    return_content: true
+    status_code: 200
+  register: api_auth_test
+
+- debug:
+    msg: "{{ api_auth_test.json }}"

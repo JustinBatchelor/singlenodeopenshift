@@ -1,0 +1,16 @@
+- name: task to reauthenticate
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/assisted_installer/tasks/authenticate.yml"
+
+- name: task to install cluster when the cluster is in ready status
+  ansible.builtin.uri:
+    url: https://api.openshift.com/api/assisted-install/v2/clusters/{{ cluster_id }}/actions/install
+    method: POST
+    body_format: json
+    headers:
+      Authorization: "Bearer {{ api_token }}"
+      Content-Type: "application/json"
+    body:
+      cluster_id: "{{ cluster_id }}"
+    status_code: 202
+    return_content: true
+  when: cluster_results.json.status == "ready"

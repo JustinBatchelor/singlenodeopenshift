@@ -1,0 +1,57 @@
+---
+- name: register cluster using API
+  uri:
+    url: https://api.openshift.com/api/assisted-install/v2/clusters
+    method: POST
+    body_format: json
+    headers:
+      Authorization: "Bearer {{ api_token }}"
+      Content-Type: "application/json"
+    status_code: 201
+    body:
+      name: "{{ registerCluster.name }}"
+      high_availability_mode: "{{ registerCluster.high_availability_mode }}"
+      openshift_version: "{{ registerCluster.openshift_version }}"
+      pull_secret: "{{ raw_pull_secret | to_json }}"
+      base_dns_domain: "{{ base_dns_domain }}"
+  register: register_result
+
+- debug:
+    msg: "{{ register_result.json }}"
+  when: debug_mode == true
+
+- name: init cluster id variable
+  ansible.builtin.set_fact:
+    cluster_id: "{{ register_result.json.id }}"
+
+- name: POST request to create an infra environment
+  uri:
+    url: "https://api.openshift.com/api/assisted-install/v2/infra-envs"
+    method: POST
+    body_format: json
+    headers:
+      Authorization: "Bearer {{ api_token }}"
+      Content-Type: "application/json"
+    body:
+      name: "{{ infraEnvironment.name }}"
+      image_type: "{{ infraEnvironment.image_type }}"
+      cpu_architecture: "{{ infraEnvironment.cpu_architecture }}"
+      cluster_id: "{{ cluster_id }}"
+      pull_secret: "{{ raw_pull_secret | to_json }}"
+    return_content: yes
+    status_code: 201
+  register: infra_env_result
+
+- debug:
+    msg: "{{ infra_env_result.json }}"
+  when: debug_mode == true
+
+- name: init infra env id variable
+  ansible.builtin.set_fact:
+    infra_env_id: "{{ infra_env_result.json.id }}"
+
+- name: download url to iso path variable
+  ansible.builtin.get_url:
+    url: "{{ infra_env_result.json.download_url }}"
+    dest: "{{ isos.path }}{{ isos.name }}"
+    mode: 0755

@@ -1,0 +1,6 @@
+---
+# vars file for assisted_installer
+packages:
+  - jq
+
+cluster_exists: false

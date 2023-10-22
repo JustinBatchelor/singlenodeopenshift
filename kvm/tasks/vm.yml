@@ -1,0 +1,10 @@
+#### Define VM and get it running. 
+- name: Ensure VM is defined 
+  community.libvirt.virt:
+    command: define
+    xml: "{{ lookup('template', 'templates/snoVM.xml.j2') }}"
+
+- name: Start the VM
+  community.libvirt.virt:
+    command: start
+    name: "{{ vmname }}"

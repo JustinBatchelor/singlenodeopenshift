@@ -1,0 +1,9 @@
+---
+# tasks file for kvm
+
+# Task to configure storage pools
+- name: configure storage for sno cluster
+  ansible.builtin.include_tasks: storage.yml
+
+- name: ensure vm is defined and running
+  ansible.builtin.include_tasks: vm.yml

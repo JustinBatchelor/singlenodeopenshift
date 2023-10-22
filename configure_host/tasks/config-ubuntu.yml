@@ -1,0 +1,18 @@
+---
+# Task to install the required packages on the host
+- name: install packages on host
+  ansible.builtin.apt:
+    pkg: 
+      - "{{ item }}"
+  loop: "{{ packages }}"
+
+# Task to ensure that the service libvirtd is enabled and started
+- name: enable and start service libvirtd
+  ansible.builtin.service:
+    name: libvirtd
+    state: started
+    enabled: yes
+
+
+
+
