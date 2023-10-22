@@ -32,5 +32,25 @@ After running this automation you should have a local OpenShift cluster stood up
 
 
 
+## System Requirements
+
+In order for this process to go smoothly you should have a relatively beefy system. The Red Hat [docs](https://docs.openshift.com/container-platform/4.13/installing/installing_sno/install-sno-preparing-to-install-sno.html) state that we need the following resources just to deploy a single node cluster
+
+| Profile | vCPU | Memory | Storage |
+| ------- | ---- | ------ | ------- | 
+| Minimum | 8vCPU cores | 16GB of RAM | 120GB |
+
+Given the following specifications we recommend your machine have the following resources before you even consider using this code
+
+| vCPU | Memory | Storage |
+| ---- | ------ | ------- |
+| 16vCPU cores | 32 GB of RAM | 1TB |
+
+This automation was tested using the following hardware
+```
+CPU: Ryzen 9 5900X (12 cores, 24 vcpu)
+Mem: 64GB of RAM
+Storage: 1TB
+```
 
 
