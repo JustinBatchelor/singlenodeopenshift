@@ -42,11 +42,11 @@ Given the following specifications we recommend your machine have the following 
 | ---- | ------ | ------- |
 | 16vCPU cores | 32 GB of RAM | 1TB |
 
-This automation was tested using the following hardware
-```
-CPU: Ryzen 9 5900X (12 cores, 24 vcpu)
-Mem: 64GB of RAM
-Storage: 1TB
+## How To Use
+
+Using this repository is simple. Run the following command
+``` 
+ansible-playbook deploy-cluster.yml
 ```
 
 
