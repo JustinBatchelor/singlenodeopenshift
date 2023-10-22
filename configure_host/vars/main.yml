@@ -1,9 +1,12 @@
 ---
 # vars file for configure_host
 packages:
-  - bridge-utils
-  - libvirt-daemon
-  - virt-manager
-  - bind9
-  - bind9utils
-  - bind9-doc
+  ubuntu:
+    - bridge-utils
+    - libvirt-daemon
+    - virt-manager
+    - bind9
+    - bind9utils
+    - bind9-doc
+    - python3-lxml
+    - build-essential

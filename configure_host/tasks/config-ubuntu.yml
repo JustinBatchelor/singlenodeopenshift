@@ -4,7 +4,7 @@
   ansible.builtin.apt:
     pkg: 
       - "{{ item }}"
-  loop: "{{ packages }}"
+  loop: "{{ packages.ubuntu }}"
 
 # Task to ensure that the service libvirtd is enabled and started
 - name: enable and start service libvirtd
