@@ -6,7 +6,7 @@
   <source>
   </source>
   <target>
-    <path>/var/lib/libvirt/images</path>
+    <path>{{ storagePool[storage_pool_name]["path"] }}</path>
     <permissions>
       <mode>0711</mode>
       <owner>0</owner>

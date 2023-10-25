@@ -13,8 +13,8 @@
 - name: include apiFinalizeInstall tasks
   ansible.builtin.include_tasks: apiFinalizeInstall.yml
 
-- name: include configureDNS tasks
-  ansible.builtin.include_tasks: configureDNS.yml
+# - name: include configureDNS tasks
+#   ansible.builtin.include_tasks: configureDNS.yml
 
 # - name: task to add entries to /etc/hosts
 #   ansible.builtin.lineinfile:

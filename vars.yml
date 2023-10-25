@@ -1,6 +1,6 @@
 ---
-vmname: ansible-openshift-test-8
-base_dns_domain: "example.com"
+vmname: ocp-sno-test-2
+base_dns_domain: "purslane.com"
 storage_pool_name: "default"
 
 cluster_base_domain: "{{ vmname }}.{{ base_dns_domain }}"
@@ -20,7 +20,13 @@ isos:
 
 interfaces:
   bridge:
+    # virsh_network_name: 'virbr0'
     name: br0
+    cidr: '192.168.1.0/24'
+    router: '192.168.1.1'
+    netmask: '255.255.255.0'
+    dhcp_start: '192.168.1.2'
+    dhcp_end: '192.168.1.254'
 
 storagePool:
   default:

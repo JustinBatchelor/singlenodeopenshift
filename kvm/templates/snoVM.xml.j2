@@ -35,9 +35,9 @@
       <alias name='sata0-0-0'/>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
     </disk>
-    <interface type='network'>
-      <source network='default'/>
-      <model type='virtio'/>
+    <interface type="bridge">
+      <source bridge="{{ interfaces.bridge.name }}"/>
+      <model type="virtio"/>
     </interface>
     <graphics type='spice' port='5900' autoport='yes' listen='127.0.0.1'>
       <listen type='address' address='127.0.0.1'/>

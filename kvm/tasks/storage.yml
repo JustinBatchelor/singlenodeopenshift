@@ -1,8 +1,19 @@
 ---
-- name: get volume status
-  ansible.builtin.stat:
-    path: "{{ storagePool[storage_pool_name]['path'] }}{{ storagePool[storage_pool_name]['volume']['name'] }}"
-  register: volume_status
+- name: task to get all storage pools
+  community.libvirt.virt_pool:
+    command: list_pools
+    name: '*'
+  register: pools
+
+- debug:
+    msg: "{{ pools }}"
+
+- name: task to create storage pool if it does not exist
+  community.libvirt.virt_pool:
+    command: define
+    name: "{{ storage_pool_name }}"
+    xml: '{{ lookup("template", "templates/storagePool.xml.j2") }}'
+  when: storage_pool_name not in pools.list_pools
 
 # Gather facts about storage pools
 # Facts will be available as 'ansible_libvirt_pools'
@@ -10,39 +21,19 @@
   community.libvirt.virt_pool:
     command: facts
 
-- name: task to init basic facts about storage pools
-  ansible.builtin.set_fact:
-    storage_pool_state: "{{ ansible_libvirt_pools[storage_pool_name]['state'] | default('', true) }}"
+- debug:
+    msg: "{{ ansible_libvirt_pools }}"
 
-- block:
-  - name: Stop {{ storage_pool_name }} storage pool
-    community.libvirt.virt_pool:
-      command: destroy
-      name: "{{ storage_pool_name }}"
+- name: task to start storage pool if it does not already exist
+  community.libvirt.virt_pool:
+    command: create
+    name: "{{ storage_pool_name }}"
+  when: 'ansible_libvirt_pools[storage_pool_name]["state"] == "inactive"'
 
-  - name: Delete the {{ storage_pool_name }} storage pool (destroys contents)
-    community.libvirt.virt_pool:
-      command: delete
-      name: "{{ storage_pool_name }}"
-
-  - name: define {{ storage_pool_name }} storage pool
-    community.libvirt.virt_pool:
-      command: define
-      name: "{{ storage_pool_name }}"
-      xml: '{{ lookup("template", "templates/storagePool.xml.j2") }}'
-
-  - name: Build {{ storage_pool_name }} storage pool
-    community.libvirt.virt_pool:
-      command: build
-      name: "{{ storage_pool_name }}"
-
-  - name: Start {{ storage_pool_name }} storage pool
-    community.libvirt.virt_pool:
-      command: create
-      name: "{{ storage_pool_name }}"
-
-  when: 
-    - storage_pool_name != 'active'
+- name: get volume status
+  ansible.builtin.stat:
+    path: "{{ storagePool[storage_pool_name]['path'] }}{{ storagePool[storage_pool_name]['volume']['name'] }}"
+  register: volume_status
 
 - name: ensure volume with {{ storage }} GB exists
   ansible.builtin.command:
