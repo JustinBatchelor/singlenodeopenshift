@@ -12,11 +12,13 @@ After running this automation successfully you should have a local OpenShift clu
 
 
 ## Dependancies
-- `python3.9+` is installed on your system
+- `python3.10+` is installed on your system
 
 - `ansible` is installed on your system
     - for Debian distros (ex. Ubuntu) run the following command
-        - ```sudo apt install ansible``` 
+        - `sudo apt install ansible` 
+    - for CentOS distros (ex RHEL/Fedora) run the following command
+        - `sudo dnf install ansible`
 
 
 
