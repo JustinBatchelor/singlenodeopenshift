@@ -1,7 +1,9 @@
 preflight-checks
 =========
 
-Role to ensure that all requirements to communicate to the Assisted Installer API are/have been met. This  
+Role to ensure that all requirements to communicate to the Assisted Installer API are/have been met. This role also contains the code need to generate a new token that can be used to authenticate against the Assisted Installer API.  
+
+_**Please note that tokens are only valid for 15 minutes as per the Assisted Installer documentation**_
 
 Requirements
 ------------

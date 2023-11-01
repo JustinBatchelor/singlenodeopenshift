@@ -11,3 +11,6 @@
     - name: Include role preflight-checks
       ansible.builtin.include_role:
         name: preflight-checks
+
+    - debug:
+        msg: '{{ api_token }}'
