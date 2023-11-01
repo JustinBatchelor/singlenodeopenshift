@@ -1,0 +1,8 @@
+- name: Playbook used during testing of the role preflight-checks
+  hosts: localhost
+  vars_files:
+    - '../vars.yml'
+  tasks:
+    - name: Include role preflight-checks
+      ansible.builtin.include_role:
+        name: preflight-checks

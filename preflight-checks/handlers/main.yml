@@ -1,0 +1,7 @@
+---
+# handlers file for preflight-checks
+- name: Install ocm cli
+  ansible.builtin.get_url:
+    url: '{{ ocm_cli["download_url"] }}'
+    dest: '/usr/bin/ocm'
+    mode: '0755'

@@ -1,6 +1,0 @@
----
-- name: task to download the ocm binary file and make it executable
-  ansible.builtin.get_url:
-    url: "{{ ocm_cli_url }}"
-    dest: /usr/bin/ocm
-    mode: '0755'

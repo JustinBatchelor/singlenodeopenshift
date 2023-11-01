@@ -1,53 +1,41 @@
 ---
-vmname: ocp-sno-test-2
-base_dns_domain: "purslane.com"
-storage_pool_name: "default"
+vmname: 'ocp-sno-test'
 
-cluster_base_domain: "{{ vmname }}.{{ base_dns_domain }}"
+base_dns_domain: 'purslane.com'
 
-memory: 16777216
-vcpus: 8
-storage: 130
+cluster_base_domain: '{{ vmname }}.{{ base_dns_domain }}'
+
 minutes: 10
 
-pull_secret_path: /home/batchelor/Downloads/pull-secret.txt # /absolute/path/to/pull-secret.txt
+# Files that contain the required credentials to authenticate to the Assisted Installer API
+assisted_installer_credentials: 
+  pull_secret_path: '/home/batchelor/Documents/sno/pull-secret.txt' # /absolute/path/to/pull-secret.txt
+  token_path: '/home/jbatchel/Documents/sno/token.txt'
 
-ocm_cli_url: "https://github.com/openshift-online/ocm-cli/releases/download/v0.1.61/ocm-linux-amd64"
-
-isos:
-  path: /var/lib/libvirt/isos/
-  name: "{{ vmname }}-assisted-install.iso"
-
-interfaces:
-  bridge:
-    # virsh_network_name: 'virbr0'
-    name: br0
-    cidr: '192.168.1.0/24'
-    router: '192.168.1.1'
-    netmask: '255.255.255.0'
-    dhcp_start: '192.168.1.2'
-    dhcp_end: '192.168.1.254'
-
-storagePool:
-  default:
-    name: "default"
-    path: /var/lib/libvirt/images/
-    volume:
-      name: "{{ vmname }}.qcow2"
-  openshift:
-    name: "openshift"
-    path: /var/lib/libvirt/images/
-    volume:
-      name: "{{ vmname }}.qcow2"
+# Resources for the singlenode openshift cluster
+cluster_resources:
+  storage: 
+    disk:
+      - size_mb: 300
+        class: 'thin'
+      - size_mb: 150
+        class: 'thin'
+  memory:
+    size_mb: 32768
+  cpu:
+    cores: 8
 
 registerCluster:
-  name: "{{ vmname }}"
-  high_availability_mode: "None"
-  openshift_version: "4.13"
+  name: '{{ vmname }}'
+  high_availability_mode: 'None'
+  openshift_version: '4.13'
 
 infraEnvironment:
-  name: "{{ vmname }}-infra-env"
-  image_type: "minimal-iso"
-  cpu_architecture: "x86_64"
+  name: '{{ vmname }}-infra-env'
+  image_type: 'minimal-iso'
+  cpu_architecture: 'x86_64'
 
-debug_mode: false
+ocm_cli:
+  version: '0.1.70'
+  download_url: 'https://github.com/openshift-online/ocm-cli/releases/download/v{{ ocm_cli["version"] }}/ocm-linux-amd64'
+  binary_path: '/usr/bin/ocm'

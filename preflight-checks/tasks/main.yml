@@ -1,0 +1,7 @@
+---
+# tasks file for preflight-checks
+# - name: Include credentials tasks
+#   ansible.builtin.include_tasks: validate/credentials.yml
+
+- name: Include ocm tasks
+  ansible.builtin.include_tasks: validate/ocm.yml

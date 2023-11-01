@@ -1,0 +1,10 @@
+---
+- name: Task to get the ocm cli binary status
+  ansible.builtin.stat:
+    path: '{{ ocm_cli["download_url"] }}'
+  register: ocm_cli_stat_results
+
+- name: VALIDATION FAIL
+  ansible.builtin.debug:
+    msg: 'It seems that the ocm cli binary is not present on this machine, please hold on while we download it for you'
+  notify: 'Install ocm cli'
