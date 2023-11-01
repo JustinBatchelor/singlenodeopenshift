@@ -2,6 +2,9 @@
 
 ## Description
 
+Ansible automation that will stand up a single node OpenShift cluster on your local proxmox node using the assisted installer API [Red Hat Assisted Installer](https://access.redhat.com/documentation/en-us/assisted_installer_for_openshift_container_platform/2022/html/assisted_installer_for_openshift_container_platform/installing-with-api#doc-wrapper). 
+
+After running this automation successfully you should have a local OpenShift cluster running in your proxmox environment.
 
 ## Pre-Requisites
 
@@ -15,12 +18,6 @@
     - for Debian distros (ex. Ubuntu) run the following command
         - ```sudo apt install ansible``` 
 
-- `ansible collections`
-    - A list of collections that you need to download are in the `requirements.yml` file. You can quickly install these collections to your machine by running the following command 
-        - ```ansible-galaxy collection install -r requirements.yml ```
-
-
-## System Requirements
 
 
 
