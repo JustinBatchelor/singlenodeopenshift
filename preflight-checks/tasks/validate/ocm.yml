@@ -1,10 +1,39 @@
 ---
 - name: Task to get the ocm cli binary status
   ansible.builtin.stat:
-    path: '{{ ocm_cli["download_url"] }}'
+    path: '{{ ocm_cli_binary_path }}'
   register: ocm_cli_stat_results
 
-- name: VALIDATION FAIL
-  ansible.builtin.debug:
-    msg: 'It seems that the ocm cli binary is not present on this machine, please hold on while we download it for you'
-  notify: 'Install ocm cli'
+# Block of code to run when the ocm cli binary is missing
+- block:
+  - name: OCM cli binary is missing
+    ansible.builtin.debug:
+      msg: 'It seems that the ocm cli binary is not present on this machine, please hold on while we download it for you. The ocm_cli will be downloaded to {{ ocm_cli_binary_path }}'
+
+  - name: Install ocm cli
+    ansible.builtin.get_url:
+      url: '{{ ocm_cli_download_url }}'
+      dest: '{{ ocm_cli_binary_path }}'
+      mode: '0755'
+  when: ocm_cli_stat_results.stat.exists == false
+
+- name: Task to get ocm version
+  ansible.builtin.command:
+    cmd: 'ocm version'
+  register: ocm_version_results
+
+# Block of code to run when there is a version mismatch
+- block:
+  - name: Task to remove the ocm cli binary
+    ansible.builtin.file:
+      path: '{{ ocm_cli_binary_path }}'
+      state: absent
+    
+  - name: Task to install the correct version of ocm
+    ansible.builtin.get_url:
+      url: '{{ ocm_cli_download_url }}'
+      dest: '{{ ocm_cli_binary_path }}'
+      mode: '0755'
+  when: ocm_version_results.stdout != ocm_cli_version
+
+

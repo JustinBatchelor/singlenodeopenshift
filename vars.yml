@@ -7,6 +7,10 @@ cluster_base_domain: '{{ vmname }}.{{ base_dns_domain }}'
 
 minutes: 10
 
+ocm_cli_version: '0.1.70'
+ocm_cli_download_url: 'https://github.com/openshift-online/ocm-cli/releases/download/v{{ ocm_cli_version }}/ocm-linux-amd64'
+ocm_cli_binary_path: '/usr/bin/ocm'
+
 # Files that contain the required credentials to authenticate to the Assisted Installer API
 assisted_installer_credentials: 
   pull_secret_path: '/home/batchelor/Documents/sno/pull-secret.txt' # /absolute/path/to/pull-secret.txt
@@ -35,7 +39,4 @@ infraEnvironment:
   image_type: 'minimal-iso'
   cpu_architecture: 'x86_64'
 
-ocm_cli:
-  version: '0.1.70'
-  download_url: 'https://github.com/openshift-online/ocm-cli/releases/download/v{{ ocm_cli["version"] }}/ocm-linux-amd64'
-  binary_path: '/usr/bin/ocm'
+
