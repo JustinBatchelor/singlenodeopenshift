@@ -9,3 +9,6 @@
       private: false
   become: true
   tasks:
+    - name: Include preflight-check role
+      ansible.builtin.include_role:
+        name: preflight-checks

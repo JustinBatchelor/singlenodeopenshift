@@ -1,5 +1,4 @@
 ---
-# Task file to validate against the assisted installer API using the provided offline token
 - name: Task to extract the offline token from {{ assisted_installer_credentials.token_path }}
   ansible.builtin.set_fact:
     offline_token: '{{ lookup("file", assisted_installer_credentials.token_path) }}'
@@ -16,4 +15,3 @@
 - name: Task to update the api_token fact with results from previous task 
   ansible.builtin.set_fact: 
     api_token: '{{ api_token_results.stdout }}'
-

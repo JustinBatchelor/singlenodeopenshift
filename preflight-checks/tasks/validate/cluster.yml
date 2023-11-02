@@ -1,0 +1,34 @@
+---
+- name: Query API for all existing clusters
+  ansible.builtin.uri:
+    url: https://api.openshift.com/api/assisted-install/v2/clusters
+    method: GET
+    body_format: json
+    headers:
+      Authorization: "Bearer {{ api_token }}"
+      Content-Type: "application/json"
+    status_code: 200
+    return_content: true
+  register: cluster_results
+
+- name: Task to create the query string to return the object representing the cluster if it exists
+  ansible.builtin.set_fact:
+    cluster_query_string: '[?name==`{{ vmname }}`]'
+
+- name: Task to return the object representing the cluster if it exists
+  ansible.builtin.set_fact:
+    cluster: '{{ cluster_results.json | community.general.json_query(cluster_query_string) }}'
+
+- name: Task to init basic cluster fact
+  ansible.builtin.set_fact:
+    cluster_exists: '{{ cluster | length == 1 }}'
+
+- name: Task to fail if cluster contains more then one object
+  ansible.builtin.fail:
+    msg: "It seems there is more then one cluster with the name {{ vmname }}. Please delete the extra cluster(s) and try again."
+  when: cluster | length > 1
+
+
+
+
+

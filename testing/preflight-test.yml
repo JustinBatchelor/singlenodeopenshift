@@ -13,4 +13,4 @@
         name: preflight-checks
 
     - debug:
-        msg: '{{ api_token }}'
+        msg: "{{ cluster_exists }}"

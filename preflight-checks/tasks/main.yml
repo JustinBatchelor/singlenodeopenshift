@@ -1,10 +1,14 @@
 ---
 # tasks file for preflight-checks
-# - name: Include credentials tasks
-#   ansible.builtin.include_tasks: validate/credentials.yml
+- name: Include credentials tasks
+  ansible.builtin.include_tasks: validate/credentials.yml
 
-# - name: Include ocm tasks
-#   ansible.builtin.include_tasks: validate/ocm.yml
+- name: Include ocm tasks
+  ansible.builtin.include_tasks: validate/ocm.yml
 
-- name: Include assisted installer tasks
-  ansible.builtin.include_tasks: validate/assisted-installer.yml
+- name: Include authenticate tasks
+  ansible.builtin.include_tasks: authenticate.yml
+
+- name: Include cluster tasks
+  ansible.builtin.include_tasks: validate/cluster.yml
+
