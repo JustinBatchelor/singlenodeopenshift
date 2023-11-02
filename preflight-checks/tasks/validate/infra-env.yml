@@ -1,0 +1,40 @@
+---
+- name: Task to Query API for all existing infra-environments
+  ansible.builtin.uri:
+    url: https://api.openshift.com/api/assisted-install/v2/infra-envs
+    method: GET
+    body_format: json
+    headers:
+      Authorization: "Bearer {{ api_token }}"
+      Content-Type: "application/json"
+    status_code: 200
+    return_content: true
+  register: infra_env_results
+
+- name: Task to create the query string to return the object representing the infra_env if it exists
+  ansible.builtin.set_fact:
+    infra_env_query_string: '[?name==`{{ infraEnvironment["name"] }}`]'
+
+- name: Task to return the object representing the infra_env if it exists
+  ansible.builtin.set_fact:
+    infra_env: '{{ infra_env_results.json | community.general.json_query(infra_env_query_string) }}'
+
+- name: Task to fail if infra_env contains more then one object
+  ansible.builtin.fail:
+    msg: "It seems there is more then one infra_env with the name {{ vmname }}. Please delete the extra infra_env(s) and try again."
+  when: infra_env | length > 1
+
+- name: Task to delete infra env if it exists
+  ansible.builtin.uri:
+    url: 'https://api.openshift.com/api/assisted-install/v2/infra-envs/{{ infra_env[0]["id"] }}'
+    method: DELETE
+    body_format: json
+    headers:
+      Authorization: "Bearer {{ api_token }}"
+      Content-Type: "application/json"
+    body:
+      infra_env_id: '{{ infra_env[0]["id"] }}'
+    status_code: 204
+    return_content: true
+  when: infra_env | length == 1
+

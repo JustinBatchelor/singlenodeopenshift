@@ -1,26 +1,17 @@
 ---
 # tasks file for install_cluster
 
-- name: include apiClusterReady tasks
-  ansible.builtin.include_tasks: apiClusterReady.yml
 
-- name: include apiInstallCluster tasks
-  ansible.builtin.include_tasks: apiInstallCluster.yml
 
-- name: include apiInstallHost tasks
-  ansible.builtin.include_tasks: apiInstallHost.yml
+# - name: include apiClusterReady tasks
+#   ansible.builtin.include_tasks: apiClusterReady.yml
 
-- name: include apiFinalizeInstall tasks
-  ansible.builtin.include_tasks: apiFinalizeInstall.yml
+# - name: include apiInstallCluster tasks
+#   ansible.builtin.include_tasks: apiInstallCluster.yml
 
-# - name: include configureDNS tasks
-#   ansible.builtin.include_tasks: configureDNS.yml
+# - name: include apiInstallHost tasks
+#   ansible.builtin.include_tasks: apiInstallHost.yml
 
-# - name: task to add entries to /etc/hosts
-#   ansible.builtin.lineinfile:
-#     path: /etc/hosts
-#     line: "{{ cluster_results.json.api_vip }} {{ item }}"
-#     state: present
-#   loop: "{{ hostsEntries }}"
-#   when: cluster_results.json.status == "available" or cluster_results.json.status == "installed" 
+# - name: include apiFinalizeInstall tasks
+#   ansible.builtin.include_tasks: apiFinalizeInstall.yml
 

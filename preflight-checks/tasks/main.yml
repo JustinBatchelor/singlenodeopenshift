@@ -9,6 +9,20 @@
 - name: Include authenticate tasks
   ansible.builtin.include_tasks: authenticate.yml
 
+- name: Include infra-env tasks
+  ansible.builtin.include_tasks: validate/infra-env.yml
+
 - name: Include cluster tasks
   ansible.builtin.include_tasks: validate/cluster.yml
 
+### TODO ###
+# - add logic to remove any vm in proxmox with the same name as the variable `vmname`
+
+- name: Include registerCluster tasks
+  ansible.builtin.include_tasks: registerCluster.yml
+
+- name: Include isos tasks
+  ansible.builtin.include_tasks: validate/isos.yml
+
+### TODO ###
+# - add logic to upload the new iso file to proxmox.  (should also keep in mind to remove the old iso file if it exists)

@@ -1,9 +1,12 @@
 ---
-vmname: 'test-sno-1'
+vmname: 'sno'
 
 base_dns_domain: 'purslane.com'
 
 cluster_base_domain: '{{ vmname }}.{{ base_dns_domain }}'
+
+local_user: jbatchel
+local_group: jbatchel
 
 minutes: 10
 
@@ -30,7 +33,6 @@ cluster_resources:
     cores: 8
 
 registerCluster:
-  name: '{{ vmname }}'
   high_availability_mode: 'None'
   openshift_version: '4.13'
 
@@ -38,5 +40,10 @@ infraEnvironment:
   name: '{{ vmname }}-infra-env'
   image_type: 'minimal-iso'
   cpu_architecture: 'x86_64'
+
+isos:
+  path: '/home/jbatchel/Documents/isos/'
+  name: '{{ vmname }}-installer.iso'
+
 
 

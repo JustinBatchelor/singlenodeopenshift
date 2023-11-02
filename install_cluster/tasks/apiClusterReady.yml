@@ -18,6 +18,5 @@
     status_code: 200
     return_content: true
   register: cluster_results
-  until: cluster_results.json.status == "ready" or cluster_results.json.status == "available" or cluster_results.json.status == "installed" or cluster_results.json.status == "installing" or cluster_results.json.status == "finalizing"
   retries: 150
   delay: 5

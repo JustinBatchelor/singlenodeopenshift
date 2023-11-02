@@ -1,0 +1,13 @@
+{
+    "ansible.python.interpreterPath": "/usr/bin/python3",
+    "github.copilot.enable": {
+        "ansible": "false",
+        "yaml": "false"
+    },
+    "github.copilot.advanced": {
+    
+    },
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks": "file:///home/jbatchel/playground/singlenodeopenshift/preflight-checks/tasks/validate/cluster.yml"
+    }
+}

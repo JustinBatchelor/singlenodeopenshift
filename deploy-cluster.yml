@@ -6,7 +6,7 @@
   vars_prompt:
     - name: ansible_become_password
       prompt: "Enter your sudo password here"
-      private: false
+      private: true
   become: true
   tasks:
     - name: Include preflight-check role
