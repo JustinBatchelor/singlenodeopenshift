@@ -26,18 +26,19 @@
     scsi: 
       scsi0: '{{ cluster_resources.storage.disk[0].format }}'
       scsi1: '{{ cluster_resources.storage.disk[1].format }}'
+    boot: 'order=scsi0;ide2;net0'
     ostype: '{{ cluster_resources.ostype }}'
     cpu: '{{ cluster_resources.cpu.chipset }}'
     cores: '{{ cluster_resources.cpu.cores }}'
     memory: '{{ cluster_resources.memory.size_mb }}'
-    vmid: 100
+    vmid: 101
     state: present
 
-# - name: Task to start vm
-#   community.general.proxmox_kvm:
-#     api_user: '{{ proxmox.api_user }}'
-#     api_password: '{{ api_password }}'
-#     api_host: '{{ proxmox.api_host }}'
-#     node: '{{ proxmox.node }}'
-#     name: '{{ vmname }}'
-#     state: started
+- name: Task to start vm
+  community.general.proxmox_kvm:
+    api_user: '{{ proxmox.api_user }}'
+    api_password: '{{ api_password }}'
+    api_host: '{{ proxmox.api_host }}'
+    node: '{{ proxmox.node }}'
+    vmid: 101
+    state: started
