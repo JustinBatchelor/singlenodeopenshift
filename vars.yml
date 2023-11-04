@@ -21,16 +21,29 @@ assisted_installer_credentials:
 
 # Resources for the singlenode openshift cluster
 cluster_resources:
-  storage: 
+  scsihardware: 'virtio-scsi-single'
+  storage:
     disk:
-      - size_mb: 300
-        class: 'thin'
-      - size_mb: 150
-        class: 'thin'
+      - name: disk0
+        format: 'local-lvm:300'
+      - name: disk1
+        format: 'local-lvm:150'
   memory:
     size_mb: 32768
   cpu:
+    type: 'q35'
+    chipset: 'x86-64-v2-AES'
     cores: 8
+  network:
+    format: 'virtio,bridge=vmbr0'
+  ide:
+    ide2: 'local:iso/{{ vmname }}-installer.iso,media=cdrom'
+  ostype: 'l26'
+
+proxmox:
+  node: proxmox
+  api_user: 'root@pam'
+  api_host: '192.168.86.50:8006'
 
 registerCluster:
   high_availability_mode: 'None'

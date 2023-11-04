@@ -1,0 +1,43 @@
+---
+- name: Task to ensure the iso file is uploaded to proxmox
+  community.general.proxmox_template:
+    api_user: '{{ proxmox.api_user }}'
+    api_password: '{{ api_password }}'
+    api_host: '{{ proxmox.api_host }}'
+    node: '{{ proxmox.node }}'
+    content_type: iso
+    src: '{{ isos.path }}{{ isos.name }}'
+    force: true
+    state: present
+
+- name: Task to ensure vm exists in proxmox
+  community.general.proxmox_kvm:
+    api_user: '{{ proxmox.api_user }}'
+    api_password: '{{ api_password }}'
+    api_host: '{{ proxmox.api_host }}'
+    node: '{{ proxmox.node }}'
+    name: '{{ vmname }}'
+    ide:
+      ide2: '{{ cluster_resources.ide.ide2 }}'
+    machine: '{{ cluster_resources.cpu.type }}'
+    net:
+      net0: '{{ cluster_resources.network.format }}'
+    scsihw: '{{ cluster_resources.scsihardware }}'
+    scsi: 
+      scsi0: '{{ cluster_resources.storage.disk[0].format }}'
+      scsi1: '{{ cluster_resources.storage.disk[1].format }}'
+    ostype: '{{ cluster_resources.ostype }}'
+    cpu: '{{ cluster_resources.cpu.chipset }}'
+    cores: '{{ cluster_resources.cpu.cores }}'
+    memory: '{{ cluster_resources.memory.size_mb }}'
+    vmid: 100
+    state: present
+
+# - name: Task to start vm
+#   community.general.proxmox_kvm:
+#     api_user: '{{ proxmox.api_user }}'
+#     api_password: '{{ api_password }}'
+#     api_host: '{{ proxmox.api_host }}'
+#     node: '{{ proxmox.node }}'
+#     name: '{{ vmname }}'
+#     state: started

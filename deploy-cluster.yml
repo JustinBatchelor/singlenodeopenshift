@@ -7,6 +7,9 @@
     - name: ansible_become_password
       prompt: "Enter your sudo password here"
       private: true
+    - name: api_password
+      prompt: "Enter your proxmox api password here"
+      private: false
   become: true
   tasks:
     - name: Include preflight-check role
