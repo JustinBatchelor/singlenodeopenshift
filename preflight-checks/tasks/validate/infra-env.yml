@@ -24,17 +24,47 @@
     msg: "It seems there is more then one infra_env with the name {{ vmname }}. Please delete the extra infra_env(s) and try again."
   when: infra_env | length > 1
 
-- name: Task to delete infra env if it exists
-  ansible.builtin.uri:
-    url: 'https://api.openshift.com/api/assisted-install/v2/infra-envs/{{ infra_env[0]["id"] }}'
-    method: DELETE
-    body_format: json
-    headers:
-      Authorization: "Bearer {{ api_token }}"
-      Content-Type: "application/json"
-    body:
-      infra_env_id: '{{ infra_env[0]["id"] }}'
-    status_code: 204
-    return_content: true
+- block:
+  # - name: Task to get the infra_env hosts if they exists
+  #   ansible.builtin.uri:
+  #     url: https://api.openshift.com/api/assisted-install/v2/infra-envs/{{ infra_env[0]["id"] }}/hosts
+  #     method: GET
+  #     body_format: json
+  #     headers:
+  #       Authorization: "Bearer {{ api_token }}"
+  #       Content-Type: "application/json"
+  #     body:
+  #       infra_env_id: '{{ infra_env[0]["id"] }}'
+  #     status_code: 200
+  #     return_content: true
+  #   register: infra_env_hosts_results
+
+  - name: Task to delete each infra_env host if they exist
+    ansible.builtin.uri:
+      url: 'https://api.openshift.com/api/assisted-install/v2/infra-envs/{{ infra_env[0]["id"] }}/hosts/{{ item["id"] }}'
+      method: DELETE
+      body_format: json
+      headers:
+        Authorization: "Bearer {{ api_token }}"
+        Content-Type: "application/json"
+      body:
+        infra_env_id: '{{ infra_env[0]["id"] }}'
+        host_id: '{{ item["id"] }}'
+      status_code: 204
+      return_content: true
+    loop: '{{ infra_env_hosts_results.json }}'
+
+  - name: Task to delete infra env if it exists
+    ansible.builtin.uri:
+      url: 'https://api.openshift.com/api/assisted-install/v2/infra-envs/{{ infra_env[0]["id"] }}'
+      method: DELETE
+      body_format: json
+      headers:
+        Authorization: "Bearer {{ api_token }}"
+        Content-Type: "application/json"
+      body:
+        infra_env_id: '{{ infra_env[0]["id"] }}'
+      status_code: 204
+      return_content: true
   when: infra_env | length == 1
 
