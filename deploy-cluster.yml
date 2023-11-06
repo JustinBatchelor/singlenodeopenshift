@@ -8,8 +8,8 @@
       prompt: "Enter your sudo password here"
       private: true
     - name: api_password
-      prompt: "Enter your proxmox api password here"
-      private: false
+      prompt: "Enter the root password for your proxmox environment here"
+      private: true
   become: true
   tasks:
     - name: Include preflight-check role
