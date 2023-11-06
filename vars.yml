@@ -1,25 +1,36 @@
 ---
+# name of the vm that will be created to host the openshift cluster
 vmname: 'sno'
-
+# id of the vm that will be created to host the openshift cluster
+vmid: 101
+# domain name for the cluster
 base_dns_domain: 'purslane.io'
-
+# represnets the name of the cluster as a subdomain of the base_dns_domain
 cluster_base_domain: '{{ vmname }}.{{ base_dns_domain }}'
 
-local_user: jbatchel 
-local_group: jbatchel
+# local user of the system.. used to set permissions when templating files
+local_user: jbatchel # <--- change this to your local user
+local_group: jbatchel # <--- change this to your local group
 
-vmid: 101
-
+# the number of minutes to wait for before starting validation checks while installing the cluster 
+# api tokens only last 15 mins and some assisted installer operations take longer than that to complete
+# mainly installing the cluster and joing hosts to the cluster
 minutes: 10
 
+# version of the ocm cli to download
 ocm_cli_version: '0.1.70'
+# url to download the ocm cli from
 ocm_cli_download_url: 'https://github.com/openshift-online/ocm-cli/releases/download/v{{ ocm_cli_version }}/ocm-linux-amd64'
+# path to install the ocm cli binary to
 ocm_cli_binary_path: '/usr/bin/ocm'
 
 # Files that contain the required credentials to authenticate to the Assisted Installer API
 assisted_installer_credentials: 
-  pull_secret_path: '/home/jbatchel/Documents/sno/pull-secret.txt' # /absolute/path/to/pull-secret.txt
-  token_path: '/home/jbatchel/Documents/sno/token.txt'
+  pull_secret_path: '/home/{{ local_user }}/Documents/sno/pull-secret.txt' # /absolute/path/to/pull-secret.txt
+  token_path: '/home/{{ local_user }}/Documents/sno/token.txt' # /absolute/path/to/pull-secret.txt
+
+# Storage for the cluster in Gigabytes
+storage_size_gb: 300
 
 # Resources for the singlenode openshift cluster
 cluster_resources:
@@ -27,9 +38,7 @@ cluster_resources:
   storage:
     disk:
       - name: scsi0
-        format: 'local-lvm:300'
-      - name: scsi1
-        format: 'local-lvm:150'
+        format: 'local-lvm:{{ storage_size_gb }}'
   memory:
     size_mb: 32768
   cpu:
@@ -42,22 +51,26 @@ cluster_resources:
     ide2: 'local:iso/{{ vmname }}-installer.iso,media=cdrom'
   ostype: 'l26'
 
+# Common resources for the proxmox host
 proxmox:
   node: proxmox
   api_user: 'root@pam'
   api_host: '192.168.86.50:8006'
 
+# Resources for the cluster registration
 registerCluster:
   high_availability_mode: 'None'
   openshift_version: '4.13'
 
+# Resources for the infra environment registration
 infraEnvironment:
   name: '{{ vmname }}-infra-env'
   image_type: 'minimal-iso'
   cpu_architecture: 'x86_64'
 
+# ISO files path and names
 isos:
-  path: '/home/jbatchel/Documents/isos/'
+  path: '/home/{{ local_user }}/Documents/isos/'
   name: '{{ vmname }}-installer.iso'
 
 
