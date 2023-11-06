@@ -20,6 +20,3 @@
       ansible.builtin.include_role:
         name: install-cluster
 
-    # - name: include role to configure bind9
-    #   ansible.builtin.include_role:
-    #     name: bind9

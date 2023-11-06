@@ -8,6 +8,7 @@
     
     },
     "yaml.schemas": {
-        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks": "file:///home/jbatchel/playground/singlenodeopenshift/preflight-checks/tasks/validate/cluster.yml"
+        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks": "file:///home/jbatchel/playground/singlenodeopenshift/preflight-checks/tasks/validate/cluster.yml",
+        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": "file:///home/jbatchel/playground/singlenodeopenshift/config-bind9.yml"
     }
 }

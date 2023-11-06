@@ -25,19 +25,19 @@
   when: infra_env | length > 1
 
 - block:
-  # - name: Task to get the infra_env hosts if they exists
-  #   ansible.builtin.uri:
-  #     url: https://api.openshift.com/api/assisted-install/v2/infra-envs/{{ infra_env[0]["id"] }}/hosts
-  #     method: GET
-  #     body_format: json
-  #     headers:
-  #       Authorization: "Bearer {{ api_token }}"
-  #       Content-Type: "application/json"
-  #     body:
-  #       infra_env_id: '{{ infra_env[0]["id"] }}'
-  #     status_code: 200
-  #     return_content: true
-  #   register: infra_env_hosts_results
+  - name: Task to get the infra_env hosts if they exists
+    ansible.builtin.uri:
+      url: https://api.openshift.com/api/assisted-install/v2/infra-envs/{{ infra_env[0]["id"] }}/hosts
+      method: GET
+      body_format: json
+      headers:
+        Authorization: "Bearer {{ api_token }}"
+        Content-Type: "application/json"
+      body:
+        infra_env_id: '{{ infra_env[0]["id"] }}'
+      status_code: 200
+      return_content: true
+    register: infra_env_hosts_results
 
   - name: Task to delete each infra_env host if they exist
     ansible.builtin.uri:

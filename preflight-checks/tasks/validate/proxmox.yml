@@ -10,6 +10,40 @@
     force: true
     state: present
 
+- name: Task to get vm information by vmid
+  community.general.proxmox_vm_info:
+    api_user: '{{ proxmox.api_user }}'
+    api_password: '{{ api_password }}'
+    api_host: '{{ proxmox.api_host }}'
+    node: '{{ proxmox.node }}'
+    type: qemu
+    vmid: '{{ vmid }}'
+  register: vm_info
+
+- name: Task to stop vm if it is running
+  community.general.proxmox_kvm:
+    api_user: '{{ proxmox.api_user }}'
+    api_password: '{{ api_password }}'
+    api_host: '{{ proxmox.api_host }}'
+    name: '{{ vmname }}'
+    node: '{{ proxmox.node }}'
+    state: stopped
+    force: true
+
+- name: Task to wait a few seconds to let the vm state change
+  ansible.builtin.pause:
+    seconds: 10
+
+- name: Task to remove VM with vmid
+  community.general.proxmox_kvm:
+    api_user: '{{ proxmox.api_user }}'
+    api_password: '{{ api_password }}'
+    api_host: '{{ proxmox.api_host }}'
+    name: '{{ vmname }}'
+    vmid: '{{ vmid }}'
+    node: '{{ proxmox.node }}'
+    state: absent
+
 - name: Task to ensure vm exists in proxmox
   community.general.proxmox_kvm:
     api_user: '{{ proxmox.api_user }}'

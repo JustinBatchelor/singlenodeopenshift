@@ -5,8 +5,8 @@ base_dns_domain: 'purslane.io'
 
 cluster_base_domain: '{{ vmname }}.{{ base_dns_domain }}'
 
-local_user: sheckler
-local_group: sheckler
+local_user: jbatchel 
+local_group: jbatchel
 
 vmid: 101
 
