@@ -1,4 +1,6 @@
-# SingleNodeOpenShift
+# Single Node OpenShift | Assisted Installer
+
+***Currently only supports being used on Debian based Ansible localhosts***
 
 ## Description
 
