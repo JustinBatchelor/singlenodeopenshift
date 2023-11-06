@@ -1,5 +1,5 @@
 ---
-- name: Ansible Playbook to automate deploying a sno cluster on your local machine
+- name: Ansible Playbook to automate deploying a sno cluster on your proxmox environment
   hosts: localhost
   vars_files:
     - vars.yml
