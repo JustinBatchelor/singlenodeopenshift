@@ -1,7 +1,5 @@
 # Single Node OpenShift | Assisted Installer
 
-***Currently only supports being used on Debian based Ansible localhosts***
-
 ## Description
 
 Ansible automation that will stand up a single node OpenShift cluster on your local proxmox node using the assisted installer API [Red Hat Assisted Installer](https://access.redhat.com/documentation/en-us/assisted_installer_for_openshift_container_platform/2022/html/assisted_installer_for_openshift_container_platform/installing-with-api#doc-wrapper). 
