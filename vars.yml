@@ -18,8 +18,8 @@ ocm_cli_binary_path: '/usr/bin/ocm'
 
 # Files that contain the required credentials to authenticate to the Assisted Installer API
 assisted_installer_credentials: 
-  pull_secret_path: '/home/sheckler/Documents/sno/pull-secret.txt' # /absolute/path/to/pull-secret.txt
-  token_path: '/home/sheckler/Documents/sno/token.txt'
+  pull_secret_path: '/home/jbatchel/Documents/sno/pull-secret.txt' # /absolute/path/to/pull-secret.txt
+  token_path: '/home/jbatchel/Documents/sno/token.txt'
 
 # Resources for the singlenode openshift cluster
 cluster_resources:

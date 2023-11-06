@@ -9,6 +9,9 @@
 - name: Include authenticate tasks
   ansible.builtin.include_tasks: authenticate.yml
 
+- name: Include cluster tasks
+  ansible.builtin.include_tasks: validate/cluster.yml
+
 - name: Include infra-env tasks
   ansible.builtin.include_tasks: validate/infra-env.yml
 
