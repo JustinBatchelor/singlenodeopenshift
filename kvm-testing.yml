@@ -12,14 +12,7 @@
       private: false
   become: true
   tasks:
-    - name: Include preflight-check role
-      ansible.builtin.include_role:
-        name: preflight-checks
-      
-    - name: Include install-cluster role
-      ansible.builtin.include_role:
-        name: install-cluster
+    - name: Include tasks
+      ansible.builtin.include_tasks: '{{ playbook_dir }}/preflight-checks/tasks/validate/proxmox.yml'
 
-    - name: include role to configure bind9
-      ansible.builtin.include_role:
-        name: bind9
+    

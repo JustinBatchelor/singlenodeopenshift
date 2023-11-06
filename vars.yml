@@ -1,12 +1,14 @@
 ---
 vmname: 'sno'
 
-base_dns_domain: 'purslane.com'
+base_dns_domain: 'purslane.io'
 
 cluster_base_domain: '{{ vmname }}.{{ base_dns_domain }}'
 
-local_user: jbatchel
-local_group: jbatchel
+local_user: sheckler
+local_group: sheckler
+
+vmid: 101
 
 minutes: 10
 
@@ -16,17 +18,17 @@ ocm_cli_binary_path: '/usr/bin/ocm'
 
 # Files that contain the required credentials to authenticate to the Assisted Installer API
 assisted_installer_credentials: 
-  pull_secret_path: '/home/jbatchel/Documents/sno/pull-secret.txt' # /absolute/path/to/pull-secret.txt
-  token_path: '/home/jbatchel/Documents/sno/token.txt'
+  pull_secret_path: '/home/sheckler/Documents/sno/pull-secret.txt' # /absolute/path/to/pull-secret.txt
+  token_path: '/home/sheckler/Documents/sno/token.txt'
 
 # Resources for the singlenode openshift cluster
 cluster_resources:
   scsihardware: 'virtio-scsi-single'
   storage:
     disk:
-      - name: disk0
+      - name: scsi0
         format: 'local-lvm:300'
-      - name: disk1
+      - name: scsi1
         format: 'local-lvm:150'
   memory:
     size_mb: 32768
@@ -35,7 +37,7 @@ cluster_resources:
     chipset: 'x86-64-v2-AES'
     cores: 8
   network:
-    format: 'virtio,bridge=vmbr0'
+    format: 'virtio,bridge=vmbr0,firewall=1'
   ide:
     ide2: 'local:iso/{{ vmname }}-installer.iso,media=cdrom'
   ostype: 'l26'

@@ -15,24 +15,34 @@
     api_user: '{{ proxmox.api_user }}'
     api_password: '{{ api_password }}'
     api_host: '{{ proxmox.api_host }}'
-    node: '{{ proxmox.node }}'
-    name: '{{ vmname }}'
+    acpi: true
+    agent: 'enabled=1'
+    bios: ovmf
+    boot: 'order=scsi0;ide2;net0'
+    cpu: '{{ cluster_resources.cpu.chipset }}'
+    cores: '{{ cluster_resources.cpu.cores }}'
+    efidisk0: 
+      efitype: "4m"
+      format: 'raw'
+      pre_enrolled_keys: false
+      storage: 'local-lvm'
+    hotplug: 'disk,network,usb'
     ide:
       ide2: '{{ cluster_resources.ide.ide2 }}'
     machine: '{{ cluster_resources.cpu.type }}'
+    memory: '{{ cluster_resources.memory.size_mb }}'
+    name: '{{ vmname }}'
     net:
       net0: '{{ cluster_resources.network.format }}'
+    node: '{{ proxmox.node }}'
+    onboot: true
+    ostype: '{{ cluster_resources.ostype }}'
     scsihw: '{{ cluster_resources.scsihardware }}'
     scsi: 
       scsi0: '{{ cluster_resources.storage.disk[0].format }}'
-      scsi1: '{{ cluster_resources.storage.disk[1].format }}'
-    boot: 'order=scsi0;ide2;net0'
-    ostype: '{{ cluster_resources.ostype }}'
-    cpu: '{{ cluster_resources.cpu.chipset }}'
-    cores: '{{ cluster_resources.cpu.cores }}'
-    memory: '{{ cluster_resources.memory.size_mb }}'
-    vmid: 101
     state: present
+    vmid: '{{ vmid }}'
+
 
 - name: Task to start vm
   community.general.proxmox_kvm:
@@ -40,5 +50,5 @@
     api_password: '{{ api_password }}'
     api_host: '{{ proxmox.api_host }}'
     node: '{{ proxmox.node }}'
-    vmid: 101
+    vmid: '{{ vmid }}'
     state: started
