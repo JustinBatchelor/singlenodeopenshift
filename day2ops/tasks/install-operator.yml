@@ -1,0 +1,41 @@
+---
+- name: ensure manifest/{{ item.name }} dir exists
+  ansible.builtin.file:
+    path: '{{ playbook_dir }}/manifest/operators/{{ item.name }}'
+    state: directory
+    owner: '{{ local_user }}'
+    group: '{{ local_group }}'
+    mode: '0775'
+
+- name: template operator-group for {{ item.name }}
+  ansible.builtin.template:
+    src: templates/group.yml.j2
+    dest: '{{ playbook_dir }}/manifest/operators/{{ item.name }}/operatorgroup.yml'
+    owner: '{{ local_user }}'
+    group: '{{ local_group }}'
+    mode: '0664'
+
+- name: template subscription for {{ item.name }}
+  ansible.builtin.template:
+    src: templates/subscription.yml.j2
+    dest: '{{ playbook_dir }}/manifest/operators/{{ item.name }}/subscription.yml'
+    owner: '{{ local_user }}'
+    group: '{{ local_group }}'
+    mode: '0664'
+
+- name: template namespace for {{ item.name }}
+  ansible.builtin.template:
+    src: templates/namespace.yml.j2
+    dest: '{{ playbook_dir }}/manifest/operators/{{ item.name }}/namespace.yml'
+    owner: '{{ local_user }}'
+    group: '{{ local_group }}'
+    mode: '0664'
+
+## TODO
+# - Tasks to apply manifests from the manifest directory
+
+- name: Include lvms-operator configurations 
+  ansible.builtin.include_tasks: operators/lvms.yml
+  when: item.name == 'lvms-operator'
+
+

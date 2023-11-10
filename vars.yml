@@ -8,6 +8,12 @@ base_dns_domain: 'purslane.io'
 # represnets the name of the cluster as a subdomain of the base_dns_domain
 cluster_base_domain: '{{ vmname }}.{{ base_dns_domain }}'
 
+# cluster credential type
+# used in the /v2/clusters/{cluster_id}/credentials endpoint
+# https://api.openshift.com/?urls.primaryName=assisted-service%20service#/installer/V2DownloadClusterCredentials
+# available values: kubeadmin-password, kubeconfig, kubeconfig-noingress
+cluster_credential_type: 'kubeconfig'
+
 # local user of the system.. used to set permissions when templating files
 local_user: jbatchel # <--- change this to your local user
 local_group: jbatchel # <--- change this to your local group
@@ -38,13 +44,16 @@ cluster_resources:
   storage:
     disk:
       - name: scsi0
+        size: 300
         format: 'local-lvm:{{ storage_size_gb }}'
+      - name: scsi1
+        size: 300
   memory:
-    size_mb: 32768
+    size_mb: 38500
   cpu:
     type: 'q35'
     chipset: 'x86-64-v2-AES'
-    cores: 8
+    cores: 12
   network:
     format: 'virtio,bridge=vmbr0,firewall=1'
   ide:

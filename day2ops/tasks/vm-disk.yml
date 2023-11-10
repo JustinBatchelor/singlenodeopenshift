@@ -1,0 +1,13 @@
+---
+- name: Task to attach additional disks to the VM
+  community.general.proxmox_disk:
+    api_user: '{{ proxmox.api_user }}'
+    api_host: '{{ proxmox.api_host }}'
+    api_password: '{{ api_password }}'
+    cache: none
+    disk: '{{ item.name }}'
+    size: '{{ item.size }}'
+    storage: local-lvm
+    state: present
+    vmid: '{{ temp_vmid }}'
+  loop: '{{ cluster_resources.storage.disk[1:] }}'

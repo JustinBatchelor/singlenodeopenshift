@@ -1,0 +1,10 @@
+---
+# vars file for day2ops
+temp_vmid: 120
+
+operators:
+  - name: lvms-operator
+    namespace: openshift-storage
+  - name: ansible-automation-platform-operator
+    namespace: aap
+  # - ansible-automation-platform-operator

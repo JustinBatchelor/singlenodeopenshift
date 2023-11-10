@@ -1,0 +1,17 @@
+- name: Testing day2 operations automation
+  hosts: localhost
+  vars_files:
+    - 'vars.yml'
+  vars_prompt:
+    - name: ansible_become_password
+      prompt: "Enter your sudo password here"
+      private: true
+    # - name: api_password
+    #   prompt: "Enter the root password for your proxmox environment here"
+    #   private: true
+  become: true
+  tasks:
+    - name: Include day2ops role
+      ansible.builtin.include_role:
+        name: day2ops
+      

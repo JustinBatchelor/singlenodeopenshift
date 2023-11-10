@@ -1,0 +1,24 @@
+---
+# tasks file for day2ops
+# - name: Include var-status tasks
+#   ansible.builtin.include_tasks: simulate/var-status.yml
+
+# - name: Include kubeconfig tasks
+#   ansible.builtin.include_tasks: kubeconfig.yml
+
+# - name: Include vm-disk tasks
+#   ansible.builtin.include_tasks: vm-disk.yml
+
+- name: Include install-operator tasks
+  ansible.builtin.include_tasks: install-operator.yml
+  loop: '{{ operators }}'
+
+
+
+
+
+  
+  
+
+
+    

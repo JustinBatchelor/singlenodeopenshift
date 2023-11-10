@@ -19,6 +19,7 @@
     type: qemu
     vmid: '{{ vmid }}'
   register: vm_info
+  ignore_errors: true
 
 - name: Task to stop vm if it is running
   community.general.proxmox_kvm:
@@ -29,6 +30,8 @@
     node: '{{ proxmox.node }}'
     state: stopped
     force: true
+  when: 
+    - vm_info.proxmox_vms != []
 
 - name: Task to wait a few seconds to let the vm state change
   ansible.builtin.pause:

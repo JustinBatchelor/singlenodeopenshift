@@ -1,0 +1,32 @@
+- name: Include authentication tasks
+  ansible.builtin.include_tasks: '{{ playbook_dir }}/preflight-checks/tasks/authenticate.yml'
+
+- name: Task Query API for all existing clusters
+  ansible.builtin.uri:
+    url: https://api.openshift.com/api/assisted-install/v2/clusters
+    method: GET
+    body_format: json
+    headers:
+      Authorization: "Bearer {{ api_token }}"
+      Content-Type: "application/json"
+    status_code: 200
+    return_content: true
+  register: cluster_results
+
+- name: Task to create the query string to return the object representing the cluster if it exists
+  ansible.builtin.set_fact:
+    cluster_query_string: '[?name==`{{ vmname }}`]'
+
+- name: Task to return the object representing the cluster if it exists
+  ansible.builtin.set_fact:
+    cluster: '{{ cluster_results.json | community.general.json_query(cluster_query_string) }}'
+
+- name: Task to set the cluster_id fact
+  ansible.builtin.set_fact:
+    cluster_id: '{{ cluster[0]["id"] }}'
+
+- debug:
+    msg: '{{ cluster }}'
+
+- debug:
+    msg: '{{ cluster_id }}'
