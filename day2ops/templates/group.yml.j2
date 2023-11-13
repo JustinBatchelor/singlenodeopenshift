@@ -1,9 +1,0 @@
-apiVersion: operators.coreos.com/v1
-kind: OperatorGroup
-metadata:
-  name: {{ item.name }}
-  namespace: {{ item.namespace }}
-spec:
-  targetNamespaces:
-    - {{ item.namespace }}
-  upgradeStrategy: Default

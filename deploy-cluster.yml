@@ -20,7 +20,3 @@
       ansible.builtin.include_role:
         name: install-cluster
 
-    - name: Include day2ops role
-      ansible.builtin.include_role:
-        name: day2ops
-
