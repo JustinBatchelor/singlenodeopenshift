@@ -11,7 +11,22 @@
     #   private: true
   become: true
   tasks:
-    - name: Include day2ops role
-      ansible.builtin.include_role:
-        name: day2ops
-      
+    # - name: Include day2ops role
+    #   ansible.builtin.include_role:
+    #     name: day2ops
+
+    - name: Task to find manifiest file
+      ansible.builtin.find:
+        paths: "{{ playbook_dir }}/manifest/"
+        patterns: "*.yml"
+        recurse: yes
+      register: manifest_file
+
+    - name: Task apply manifest files to cluster
+      kubernetes.core.k8s:
+        kubeconfig: '/home/{{ local_user }}/.kube/config'
+        src: '{{ path }}'
+        state: present
+      loop: "{{ manifest_file.files | map(attribute='path') | list }}"
+      loop_control:
+        loop_var: path

@@ -9,5 +9,5 @@
     size: '{{ item.size }}'
     storage: local-lvm
     state: present
-    vmid: '{{ temp_vmid }}'
+    vmid: '{{ vmid }}'
   loop: '{{ cluster_resources.storage.disk[1:] }}'
