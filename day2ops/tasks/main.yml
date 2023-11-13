@@ -1,7 +1,7 @@
 ---
 # tasks file for day2ops
-- name: Include var-status tasks
-  ansible.builtin.include_tasks: simulate/var-status.yml
+- name: Include cluster tasks
+  ansible.builtin.include_tasks: cluster.yml
 
 - name: Include kubeconfig tasks
   ansible.builtin.include_tasks: kubeconfig.yml
