@@ -5,9 +5,6 @@
     chain: "{{ lookup('file', certificates.chain_path) }}\n"
     privateKey: "{{ lookup('file', certificates.private_key_path) }}"
 
-- debug:
-    msg: "{{ chain }}"
-
 - name: Task to template the rootCA certificate into a configmap
   ansible.builtin.template:
     src: 'templates/custom-ca-cm.j2'
@@ -22,7 +19,7 @@
     state: present
     src: '{{ playbook_dir }}/manifests/custom-ca-cm.yml'
 
-- name: Patch proxy cluster with the custom ca configmap
+- name: Patch proxy cluster with the {{ certificates.custom_ca_configmap_name }} configmap
   kubernetes.core.k8s:
     kubeconfig: '/home/{{ local_user }}/.kube/config'
     state: patched
@@ -47,7 +44,7 @@
     state: present
     src: '{{ playbook_dir }}/manifests/secret-tls.yml'
 
-- name: Patch ingresscontroller.operator with the tls secret
+- name: Patch ingresscontroller.operator with the {{ certificates.tls_secret_name }} tls secret
   kubernetes.core.k8s:
     kubeconfig: '/home/{{ local_user }}/.kube/config'
     state: patched

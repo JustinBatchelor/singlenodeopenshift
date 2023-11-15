@@ -9,7 +9,10 @@
 - name: Include vm-disk tasks
   ansible.builtin.include_tasks: vm-disk.yml
 
+### ALL DAY2OPS TASKS BELOW THIS LINE
 
+- name: Include replace-ingress tasks
+  ansible.builtin.include_tasks: replace-ingress.yml
 
 
 
