@@ -38,6 +38,18 @@ assisted_installer_credentials:
 # Storage for the cluster in Gigabytes
 storage_size_gb: 300
 
+certificates:
+  # path to root ca certificate file on your local file system
+  root_ca_path: '/home/{{ local_user }}/Documents/certificates/apps.{{ cluster_base_domain }}/cert.pem'
+  # path to fullchain certificate file on your local file system
+  chain_path: '/home/{{ local_user }}/Documents/certificates/apps.{{ cluster_base_domain }}/fullchain.pem'
+  # path to private key file on your local file system
+  private_key_path: '/home/{{ local_user }}/Documents/certificates/apps.{{ cluster_base_domain }}/privkey.pem'
+  # name of the custom ca configmap
+  custom_ca_configmap_name: 'custom-ca'
+  # name of the tls secret that will be created
+  tls_secret_name: '{{ base_dns_domain | replace(".", "-") }}-tls'
+
 # Resources for the singlenode openshift cluster
 cluster_resources:
   scsihardware: 'virtio-scsi-single'

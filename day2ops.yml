@@ -14,16 +14,65 @@
     # - name: Include day2ops role
     #   ansible.builtin.include_role:
     #     name: day2ops
-
-    - name: Task to find manifiest file
-      ansible.builtin.find:
-        paths: "{{ playbook_dir }}/manifest/"
-        patterns: "*namespace.yml"
-        recurse: yes
-      register: manifest_file
+    - name: Task to get the contents of the rootCA file and save it to a fact
+      ansible.builtin.set_fact:
+        rootCA: "{{ lookup('file', certificates.root_ca_path)  }}"
+        chain: "{{ lookup('file', certificates.chain_path) }}\n"
+        privateKey: "{{ lookup('file', certificates.private_key_path) }}"
 
     - debug:
-        msg: "{{ manifest_file.files | map(attribute='path') | list }}"
+        msg: "{{ chain }}"
+
+    - name: Task to template the rootCA certificate into a configmap
+      ansible.builtin.template:
+        src: '{{ playbook_dir }}/day2ops/templates/custom-ca-cm.j2'
+        dest: '{{ playbook_dir }}/manifests/custom-ca-cm.yml'
+        owner: '{{ local_user }}'
+        group: '{{ local_group }}'
+        mode: '0664'
+
+    - name: Task to create a configmap that includes only the root CA certificate used to sign the wildcard certificate
+      kubernetes.core.k8s:
+        kubeconfig: '/home/{{ local_user }}/.kube/config'
+        state: present
+        src: '{{ playbook_dir }}/manifests/custom-ca-cm.yml'
+
+    - name: Patch proxy cluster with the custom ca configmap
+      kubernetes.core.k8s:
+        kubeconfig: '/home/{{ local_user }}/.kube/config'
+        state: patched
+        kind: Proxy
+        name: cluster
+        definition:
+          spec:
+            trustedCA:
+              name: '{{ certificates.custom_ca_configmap_name }}'
+
+    - name: Task to template the tls secret that includes the wildcard certificate and private key
+      ansible.builtin.template:
+        src: '{{ playbook_dir }}/day2ops/templates/secret-tls.j2'
+        dest: '{{ playbook_dir }}/manifests/secret-tls.yml'
+        owner: '{{ local_user }}'
+        group: '{{ local_group }}'
+        mode: '0664'
+  
+    - name: Task to apply the tls secret that includes the wildcard certificate and private key
+      kubernetes.core.k8s:
+        kubeconfig: '/home/{{ local_user }}/.kube/config'
+        state: present
+        src: '{{ playbook_dir }}/manifests/secret-tls.yml'
+
+    - name: Patch ingresscontroller.operator with the tls secret
+      kubernetes.core.k8s:
+        kubeconfig: '/home/{{ local_user }}/.kube/config'
+        state: patched
+        kind: IngressController
+        name: default
+        namespace: openshift-ingress-operator
+        definition:
+          spec:
+            defaultCertificate:
+              name: '{{ certificates.tls_secret_name }}'
 
     # - name: Task apply manifest files to cluster
     #   kubernetes.core.k8s:
