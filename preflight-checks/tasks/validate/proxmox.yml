@@ -33,9 +33,7 @@
   when: 
     - vm_info.proxmox_vms != []
 
-- name: Task to wait a few seconds to let the vm state change
-  ansible.builtin.pause:
-    seconds: 10
+
 
 - name: Task to remove VM with vmid
   community.general.proxmox_kvm:

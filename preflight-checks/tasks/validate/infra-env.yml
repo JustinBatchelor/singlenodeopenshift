@@ -11,6 +11,9 @@
     return_content: true
   register: infra_env_results
 
+- debug:
+    msg: '{{ infra_env_results.json }}'
+
 - name: Task to create the query string to return the object representing the infra_env if it exists
   ansible.builtin.set_fact:
     infra_env_query_string: '[?name==`{{ infraEnvironment["name"] }}`]'
@@ -68,3 +71,6 @@
       return_content: true
   when: infra_env | length == 1
 
+
+- debug:
+    msg: '{{ infra_env_results.json }}'
