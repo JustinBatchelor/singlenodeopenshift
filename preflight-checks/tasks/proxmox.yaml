@@ -1,15 +1,4 @@
 ---
-- name: Task to ensure the iso file is uploaded to proxmox
-  community.general.proxmox_template:
-    api_user: '{{ proxmox.api_user }}'
-    api_password: '{{ api_password }}'
-    api_host: '{{ proxmox.api_host }}'
-    node: '{{ proxmox.node }}'
-    content_type: iso
-    src: '{{ isos.path }}{{ isos.name }}'
-    force: true
-    state: present
-
 - name: Task to get vm information by vmid
   community.general.proxmox_vm_info:
     api_user: '{{ proxmox.api_user }}'
@@ -32,8 +21,6 @@
     force: true
   when: 
     - vm_info.proxmox_vms != []
-
-
 
 - name: Task to remove VM with vmid
   community.general.proxmox_kvm:
@@ -77,7 +64,7 @@
       scsi0: '{{ cluster_resources.storage.disk[0].format }}'
     state: present
     vmid: '{{ vmid }}'
-
+    tags: '{{ tags }}'
 
 - name: Task to start vm
   community.general.proxmox_kvm:

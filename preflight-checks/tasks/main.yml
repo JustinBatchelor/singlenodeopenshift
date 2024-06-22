@@ -1,28 +1,6 @@
 ---
-# tasks file for preflight-checks
-- name: Include credentials tasks
-  ansible.builtin.include_tasks: validate/credentials.yml
-
-- name: Include ocm tasks
-  ansible.builtin.include_tasks: validate/ocm.yml
-
-- name: Include authenticate tasks
-  ansible.builtin.include_tasks: authenticate.yml
-
-- name: Include cluster tasks
-  ansible.builtin.include_tasks: validate/cluster.yml
-
-- name: Include infra-env tasks
-  ansible.builtin.include_tasks: validate/infra-env.yml
-
-- name: Include cluster tasks
-  ansible.builtin.include_tasks: validate/cluster.yml
-  
-- name: Include registerCluster tasks
-  ansible.builtin.include_tasks: registerCluster.yml
-
-- name: Include isos tasks
-  ansible.builtin.include_tasks: validate/isos.yml
+- name: Include tasks to register Single Node OpenShift cluster with assisted installer
+  ansible.builtin.include_tasks: generate-cluster.yaml
 
 - name: Include proxmox tasks
-  ansible.builtin.include_tasks: validate/proxmox.yml
+  ansible.builtin.include_tasks: proxmox.yml

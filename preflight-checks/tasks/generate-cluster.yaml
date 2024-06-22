@@ -1,0 +1,58 @@
+---
+- name: Create a Single Node OpenShift cluster
+  justinbatchelor.redhat_assisted_installer.cluster:
+    name: "{{ cluster_name }}"
+    base_dns_domain: "{{ base_dns_domain }}"
+    openshift_version: "{{ openshift_version }}"
+    cpu_architecture: "{{ cpu_architecture }}"
+    high_availability_mode: "{{ cluster_high_availability_mode }}"
+    tags: "{{ tags }}"
+    ssh_public_key: "{{ lookup('file', pub_ssh_key) }}"
+    state: "present"
+  register: cluster
+
+- name: Task to debug cluster
+  ansible.builtin.debug:
+    msg: "{{ cluster['cluster'] }}"
+
+- name: Create an infrastructure environment associated with cluster
+  justinbatchelor.redhat_assisted_installer.infra_env:
+    name: "{{ infrastructure_environment['name'] }}"
+    state: "present"
+    cluster_id: "{{ cluster['cluster'][0]['id'] }}"
+    cpu_architecture: "{{ cpu_architecture }}"
+    openshift_version: "{{ openshift_version }}"
+    image_type: "{{ infrastructure_environment['image_type'] }}"
+  register: infra_env
+
+- name: Task to debug infrastructure environment
+  ansible.builtin.debug:
+    msg: "{{ infra_env }}"
+
+- name: Create temporary directory
+  ansible.builtin.tempfile:
+    state: directory
+  register: tempdir_result
+
+- name: Set facts for the destination variable name
+  ansible.builtin.set_fact:
+    iso_destination: "{{ tempdir_result['path'] }}/{{ iso_file_name }}"
+
+- name: Download url to iso path variable
+  ansible.builtin.get_url:
+    url: "{{ infra_env['infra_env'][0]['download_url'] }}"
+    dest: "{{ iso_destination }}"
+    owner: "{{ local_user }}"
+    group: "{{ local_group }}"
+    mode: '0644'
+
+- name: Task to upload url to proxmox and overwrite an existing iso if it exists
+  community.general.proxmox_template:
+    api_user: '{{ proxmox.api_user }}'
+    api_password: '{{ api_password }}'
+    api_host: '{{ proxmox.api_host }}'
+    node: '{{ proxmox.node }}'
+    content_type: iso
+    src: '{{ iso_destination }}'
+    force: true
+    state: present

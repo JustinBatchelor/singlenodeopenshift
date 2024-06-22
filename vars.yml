@@ -1,54 +1,41 @@
 ---
-# name of the vm that will be created to host the openshift cluster
-vmname: 'sno'
-# id of the vm that will be created to host the openshift cluster
-vmid: 101
-# domain name for the cluster
-base_dns_domain: 'purslane.io'
-# represnets the name of the cluster as a subdomain of the base_dns_domain
-cluster_base_domain: '{{ vmname }}.{{ base_dns_domain }}'
-
-# cluster credential type
-# used in the /v2/clusters/{cluster_id}/credentials endpoint
-# https://api.openshift.com/?urls.primaryName=assisted-service%20service#/installer/V2DownloadClusterCredentials
-# available values: kubeadmin-password, kubeconfig, kubeconfig-noingress
-cluster_credential_type: 'kubeconfig'
 
 # local user of the system.. used to set permissions when templating files
 local_user: jbatchel # <--- change this to your local user
 local_group: jbatchel # <--- change this to your local group
+
+# name of the vm that will be created to host the openshift cluster
+vmname: 'sno-ocp'
+# id of the vm that will be created to host the openshift cluster
+vmid: 500
+# domain name for the cluster
+base_dns_domain: 'batchelor.live'
+# represnets the name of the cluster as a subdomain of the base_dns_domain
+cluster_base_domain: '{{ vmname }}.{{ base_dns_domain }}'
+# cluster_name configured to be the same as vmname in proxmox
+cluster_name: '{{ vmname }}' 
+# Availablity mode for clusters options are ["None", "Full"]
+cluster_high_availability_mode: 'None'
+# OpenShift version to deploy
+openshift_version: '4.15'
+# cpu architecture the cluster will use
+cpu_architecture: 'x86_64'
+# path to ssh_public key to add to the cluster during creation 
+# this will allow you to debug nodes if they fail via ssh
+pub_ssh_key: '/home/{{ local_user }}/.ssh/id_rsa.pub'
+
+iso_file_name: "{{ vmname }}-installer.iso"
+
+tags: "ocp,sno"
+
 
 # the number of minutes to wait for before starting validation checks while installing the cluster 
 # api tokens only last 15 mins and some assisted installer operations take longer than that to complete
 # mainly installing the cluster and joing hosts to the cluster
 minutes: 10
 
-# version of the ocm cli to download
-ocm_cli_version: '0.1.70'
-# url to download the ocm cli from
-ocm_cli_download_url: 'https://github.com/openshift-online/ocm-cli/releases/download/v{{ ocm_cli_version }}/ocm-linux-amd64'
-# path to install the ocm cli binary to
-ocm_cli_binary_path: '/usr/bin/ocm'
-
-# Files that contain the required credentials to authenticate to the Assisted Installer API
-assisted_installer_credentials: 
-  pull_secret_path: '/home/{{ local_user }}/Documents/sno/pull-secret.txt' # /absolute/path/to/pull-secret.txt
-  token_path: '/home/{{ local_user }}/Documents/sno/token.txt' # /absolute/path/to/pull-secret.txt
-
 # Storage for the cluster in Gigabytes
 storage_size_gb: 300
-
-certificates:
-  # path to root ca certificate file on your local file system
-  root_ca_path: '/home/{{ local_user }}/Documents/certificates/apps.{{ cluster_base_domain }}/cert.pem'
-  # path to fullchain certificate file on your local file system
-  chain_path: '/home/{{ local_user }}/Documents/certificates/apps.{{ cluster_base_domain }}/fullchain.pem'
-  # path to private key file on your local file system
-  private_key_path: '/home/{{ local_user }}/Documents/certificates/apps.{{ cluster_base_domain }}/privkey.pem'
-  # name of the custom ca configmap
-  custom_ca_configmap_name: 'custom-ca'
-  # name of the tls secret that will be created
-  tls_secret_name: '{{ base_dns_domain | replace(".", "-") }}-tls'
 
 # Resources for the singlenode openshift cluster
 cluster_resources:
@@ -64,8 +51,8 @@ cluster_resources:
     size_mb: 38500
   cpu:
     type: 'q35'
-    chipset: 'x86-64-v2-AES'
-    cores: 12
+    chipset: 'host'
+    cores: 8
   network:
     format: 'virtio,bridge=vmbr0,firewall=1'
   ide:
@@ -74,25 +61,17 @@ cluster_resources:
 
 # Common resources for the proxmox host
 proxmox:
-  node: proxmox
+  node: pve
   api_user: 'root@pam'
   api_host: '192.168.86.50:8006'
 
-# Resources for the cluster registration
-registerCluster:
-  high_availability_mode: 'None'
-  openshift_version: '4.13'
-
 # Resources for the infra environment registration
-infraEnvironment:
+infrastructure_environment:
   name: '{{ vmname }}-infra-env'
   image_type: 'minimal-iso'
-  cpu_architecture: 'x86_64'
+  
 
-# ISO files path and names
-isos:
-  path: '/home/{{ local_user }}/Documents/isos/'
-  name: '{{ vmname }}-installer.iso'
+
 
 
 
