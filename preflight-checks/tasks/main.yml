@@ -3,4 +3,4 @@
   ansible.builtin.include_tasks: generate-cluster.yaml
 
 - name: Include proxmox tasks
-  ansible.builtin.include_tasks: proxmox.yml
+  ansible.builtin.include_tasks: proxmox.yaml

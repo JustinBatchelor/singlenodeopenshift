@@ -18,6 +18,14 @@ After running this automation successfully you should have a local OpenShift clu
 
 ## Requirements
 
+### Environment Variables
+
+ - `REDHAT_PULL_SECRET`: 
+
+ - `REDHAT_OFFLINE_TOKEN`: 
+
+ - `PROXMOX_PASSWORD`: 
+
 
 ## How It Works
 

@@ -1,5 +1,6 @@
 ---
 
+
 # local user of the system.. used to set permissions when templating files
 local_user: jbatchel # <--- change this to your local user
 local_group: jbatchel # <--- change this to your local group
@@ -11,20 +12,23 @@ vmid: 500
 # domain name for the cluster
 base_dns_domain: 'batchelor.live'
 # represnets the name of the cluster as a subdomain of the base_dns_domain
-cluster_base_domain: '{{ vmname }}.{{ base_dns_domain }}'
+cluster_base_domain: '{{ vmname }}.{{ base_dns_domain }}' ##!! DO NOT MODIFY !!##
+
 # cluster_name configured to be the same as vmname in proxmox
-cluster_name: '{{ vmname }}' 
+cluster_name: '{{ vmname }}' ##!! DO NOT MODIFY !!##
+
 # Availablity mode for clusters options are ["None", "Full"]
 cluster_high_availability_mode: 'None'
+
 # OpenShift version to deploy
-openshift_version: '4.15'
+openshift_version: '4.15' ## FORMAT IS MAJOR.MINOR DO NOT INCLUDE PATCH
 # cpu architecture the cluster will use
-cpu_architecture: 'x86_64'
+cpu_architecture: 'x86_64' 
 # path to ssh_public key to add to the cluster during creation 
 # this will allow you to debug nodes if they fail via ssh
 pub_ssh_key: '/home/{{ local_user }}/.ssh/id_rsa.pub'
 
-iso_file_name: "{{ vmname }}-installer.iso"
+iso_file_name: "{{ vmname }}-installer.iso" ## DO NOT MODIFY
 
 tags: "ocp,sno"
 
@@ -64,6 +68,7 @@ proxmox:
   node: pve
   api_user: 'root@pam'
   api_host: '192.168.86.50:8006'
+  api_password: "{{ lookup('env', 'PROXMOX_PASSWORD') | default(None)}}"
 
 # Resources for the infra environment registration
 infrastructure_environment:

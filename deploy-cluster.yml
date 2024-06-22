@@ -3,11 +3,6 @@
   hosts: localhost
   vars_files:
     - vars.yml
-  vars_prompt:
-    - name: api_password
-      prompt: "Enter the root password for your proxmox environment here"
-      private: true
-  # become: true
   tasks:
     - name: Include preflight-check role
       ansible.builtin.include_role:
@@ -16,8 +11,3 @@
     # - name: Include install-cluster role
     #   ansible.builtin.include_role:
     #     name: install-cluster
-
-    # - name: Include day2ops role
-    #   ansible.builtin.include_role:
-    #     name: day2ops
-

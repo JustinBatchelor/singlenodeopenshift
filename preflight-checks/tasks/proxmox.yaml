@@ -2,7 +2,7 @@
 - name: Task to get vm information by vmid
   community.general.proxmox_vm_info:
     api_user: '{{ proxmox.api_user }}'
-    api_password: '{{ api_password }}'
+    api_password: '{{ proxmox.api_password }}'
     api_host: '{{ proxmox.api_host }}'
     node: '{{ proxmox.node }}'
     type: qemu
@@ -13,19 +13,19 @@
 - name: Task to stop vm if it is running
   community.general.proxmox_kvm:
     api_user: '{{ proxmox.api_user }}'
-    api_password: '{{ api_password }}'
+    api_password: '{{ proxmox.api_password }}'
     api_host: '{{ proxmox.api_host }}'
     name: '{{ vmname }}'
     node: '{{ proxmox.node }}'
     state: stopped
     force: true
-  when: 
+  when:
     - vm_info.proxmox_vms != []
 
 - name: Task to remove VM with vmid
   community.general.proxmox_kvm:
     api_user: '{{ proxmox.api_user }}'
-    api_password: '{{ api_password }}'
+    api_password: '{{ proxmox.api_password }}'
     api_host: '{{ proxmox.api_host }}'
     name: '{{ vmname }}'
     vmid: '{{ vmid }}'
@@ -35,7 +35,7 @@
 - name: Task to ensure vm exists in proxmox
   community.general.proxmox_kvm:
     api_user: '{{ proxmox.api_user }}'
-    api_password: '{{ api_password }}'
+    api_password: '{{ proxmox.api_password }}'
     api_host: '{{ proxmox.api_host }}'
     acpi: true
     agent: 'enabled=1'
@@ -43,7 +43,7 @@
     boot: 'order=scsi0;ide2;net0'
     cpu: '{{ cluster_resources.cpu.chipset }}'
     cores: '{{ cluster_resources.cpu.cores }}'
-    efidisk0: 
+    efidisk0:
       efitype: "4m"
       format: 'raw'
       pre_enrolled_keys: false
@@ -60,7 +60,7 @@
     onboot: true
     ostype: '{{ cluster_resources.ostype }}'
     scsihw: '{{ cluster_resources.scsihardware }}'
-    scsi: 
+    scsi:
       scsi0: '{{ cluster_resources.storage.disk[0].format }}'
     state: present
     vmid: '{{ vmid }}'
@@ -69,7 +69,7 @@
 - name: Task to start vm
   community.general.proxmox_kvm:
     api_user: '{{ proxmox.api_user }}'
-    api_password: '{{ api_password }}'
+    api_password: '{{ proxmox.api_password }}'
     api_host: '{{ proxmox.api_host }}'
     node: '{{ proxmox.node }}'
     vmid: '{{ vmid }}'

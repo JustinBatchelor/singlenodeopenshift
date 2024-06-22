@@ -49,7 +49,7 @@
 - name: Task to upload url to proxmox and overwrite an existing iso if it exists
   community.general.proxmox_template:
     api_user: '{{ proxmox.api_user }}'
-    api_password: '{{ api_password }}'
+    api_password: '{{ proxmox.api_password }}'
     api_host: '{{ proxmox.api_host }}'
     node: '{{ proxmox.node }}'
     content_type: iso
